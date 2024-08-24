@@ -1,0 +1,19 @@
+{
+  "name": "Nord",
+  "desc": "Inspired by the colours of the north",
+  "colours": {
+    "emphasis" : "#88C0D0",
+    "red" : "#BF616A",
+    "green" : "#A3BE8C",
+    "bg" : "#3B4252",
+    "bg_dark" : "#2E3440",
+    "bg_light" : "#434C5E",
+    "fg" : "#ECEFF4",
+    "fg_subtext" : "#D8DEE9",
+    "fg_emphasis" : "#3B4252"
+  },
+  "basefont": "Jetbrains Mono",
+  "symbolsfont": "Symbols Nerd Font",
+  "fontsize": 8,
+  "wallpaper": "~/.config/awesome/theme/nord/background.jpg"
+}

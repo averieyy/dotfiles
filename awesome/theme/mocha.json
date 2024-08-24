@@ -1,0 +1,19 @@
+{
+  "name": "Catppuccin Mocha",
+  "desc": "Catppuccin mocha ",
+  "colours": {
+    "emphasis" : "#CBA6F7",
+    "red" : "#F38BA8",
+    "green" : "#A6E3A1",
+    "bg" : "#181825",
+    "bg_dark" : "#11111B",
+    "bg_light" : "#1E1E2E",
+    "fg" : "#CDD6F4",
+    "fg_subtext" : "#A6ADC8",
+    "fg_emphasis" : "#1E1E2E"
+  },
+  "basefont": "Jetbrains Mono",
+  "symbolsfont": "Nerd Symbols",
+  "fontsize": 8,
+  "wallpaper": "~/.config/awesome/theme/nord/background.jpg"
+}
