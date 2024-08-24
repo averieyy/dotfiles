@@ -30,7 +30,7 @@ menu.power = {
 
 local function take_screenshot(args)
   args.directory = '~/Pictures/screenshots'
-  
+
   local ss = awful.screenshot (args)
 
   local function notify(s)
@@ -45,6 +45,7 @@ local function take_screenshot(args)
   if args.auto_save_delay > 0 then
     ss:connect_signal("file::saved", notify)
   else
+    -- ss:save()
     notify(ss)
   end
 

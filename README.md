@@ -2,11 +2,10 @@
 
 <figure>
 
-<img align="left" height="" src="as">
+<img src="assets/desktop.jpg">
 
-<figure align="right">
-    <p align="center">Before you continue, please notice these configs are created by someone who barely knows lua, but who is trying their best. Brain damage may occur after long exposure to this code. <b>Read at your own risk</b></p>
-</figure>
+<p align="center">Before you continue, please notice these configs are created by someone who barely knows lua, but who is trying their best. Brain damage may occur after long exposure to this code. <b>Read at your own risk</b></p>
+
 </figure>
 
 ## credit where credit's due
