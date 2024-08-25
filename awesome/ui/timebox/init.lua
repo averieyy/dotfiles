@@ -15,9 +15,10 @@ return function (s)
       font = theme.base_font .. ' 10',
     }
   }
-  
+
   s.timebox.popup = awful.popup {
     widget = s.mainwidget,
+    screen = s,
     placement = awful.placement.centered,
     visible = false,
     ontop = true,
@@ -26,13 +27,13 @@ return function (s)
   s.mainwidget:add_button(awful.button {
     modifiers = { "Any" },
     on_press = function ()
-      s.timebox.popup.visible = false 
+      s.timebox.popup.visible = false
       s.timebox.timer:stop()
     end
   })
 
   function s.timebox:show ()
-    
+
     s.timebox.popup.visible = not s.timebox.popup.visible
 
     if s.timebox.timer then
