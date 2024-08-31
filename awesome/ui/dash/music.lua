@@ -7,13 +7,12 @@ local gears = require 'gears'
 
 return function (dashwidth, dashmargins)
 
-  local margins = 16 - dashmargins
+  local totalmargins = 16
+  local margins = totalmargins - dashmargins
   local width = dashwidth - margins * 2
   local height = width / 2
 
   local musicwidget = wibox.widget {
-    forced_width = width,
-    forced_height = height,
     widget = wibox.container.margin,
     margins = margins,
     {
@@ -29,95 +28,111 @@ return function (dashwidth, dashmargins)
         }
       },
       {
+        forced_width = width,
+        forced_height = height,
         widget = wibox.container.place,
         placement = awful.placement.centered,
         {
-          layout = wibox.layout.fixed.vertical,
-          spacing = 8,
-          forced_width = width * 3 / 4,
+          widget = wibox.container.background,
+          bg = theme.bg_dark .. "ef", -- With some transparency
           {
-            widget = wibox.widget.textbox,
-            font = theme.base_font .. ' 12',
-            align = 'center',
-            id = 'title',
-            forced_height = 20,
-          },
-          {
-            widget = wibox.widget.textbox,
-            font = theme.base_font .. ' 10',
-            align = 'center',
-            id = 'artist'
-          },
-          {
-            widget = wibox.widget.progressbar,
-            forced_height = 5,
-            color = theme.emphasis,
-            background_color = theme.bg_dark,
-            max_value = 1,
-            min_value = 0,
-            value = 0,
-            shape = gears.shape.rounded_bar,
-            bar_shape = gears.shape.rounded_bar,
-            id = 'progressbar',
-          },
-          {
-            widget = wibox.container.place,
-            placement = awful.placement.centered,
+            widget = wibox.container.margin,
+            margins = 8,
             {
-              layout = wibox.layout.flex.horizontal,
+  
+              layout = wibox.layout.fixed.vertical,
               spacing = 8,
+              forced_width = width * 3 / 4,
               {
-                forced_width = 20,
                 widget = wibox.widget.textbox,
-                font = theme.symbol_font .. ' 12',
-                text = '',
-                align = true,
-                buttons = {
-                  awful.button {
-                    button = 1,
-                    on_press = function ()
-                      music.do_command('previous')
-                    end
-                  }
-                }
+                font = theme.base_font .. ' 12',
+                align = 'center',
+                id = 'title',
+                forced_height = 20,
               },
               {
-                forced_width = 20,
                 widget = wibox.widget.textbox,
-                font = theme.symbol_font .. ' 12',
-                align = true,
-                id = 'playbtn',
-                buttons = {
-                  awful.button {
-                    button = 1,
-                    on_press = function ()
-                      music.do_command('play-pause')
-                    end
-                  }
-                }
+                font = theme.base_font .. ' 10',
+                align = 'center',
+                id = 'artist'
               },
               {
-                forced_width = 20,
-                widget = wibox.widget.textbox,
-                font = theme.symbol_font .. ' 12',
-                text = '',
-                align = true,
-                buttons = {
-                  awful.button {
-                    button = 1,
-                    on_press = function ()
-                      music.do_command('next')
-                    end
-                  }
+                widget = wibox.widget.progressbar,
+                forced_height = 5,
+                color = theme.emphasis,
+                background_color = theme.bg_dark,
+                max_value = 1,
+                min_value = 0,
+                value = 0,
+                shape = gears.shape.rounded_bar,
+                bar_shape = gears.shape.rounded_bar,
+                id = 'progressbar',
+              },
+              {
+                widget = wibox.container.place,
+                placement = awful.placement.centered,
+                {
+                  layout = wibox.layout.flex.horizontal,
+                  spacing = 8,
+                  {
+                    forced_width = 20,
+                    widget = wibox.widget.textbox,
+                    font = theme.symbol_font .. ' 12',
+                    text = '',
+                    align = 'center',
+                    buttons = {
+                      awful.button {
+                        button = 1,
+                        on_press = function ()
+                          music.do_command('previous')
+                        end
+                      }
+                    }
+                  },
+                  {
+                    forced_width = 20,
+                    widget = wibox.widget.textbox,
+                    font = theme.symbol_font .. ' 12',
+                    align = 'center',
+                    id = 'playbtn',
+                    buttons = {
+                      awful.button {
+                        button = 1,
+                        on_press = function ()
+                          music.do_command('play-pause')
+                        end
+                      }
+                    }
+                  },
+                  {
+                    forced_width = 20,
+                    widget = wibox.widget.textbox,
+                    font = theme.symbol_font .. ' 12',
+                    text = '',
+                    align = 'center',
+                    buttons = {
+                      awful.button {
+                        button = 1,
+                        on_press = function ()
+                          music.do_command('next')
+                        end
+                      }
+                    }
+                  },
                 }
               },
             }
-          },
+          }
         },
       },
     },
     set_values = function (self, musicinfo)
-      self:get_children_by_id('image')[1].image = musicinfo.image
+      local image = gears.surface.load_uncached(musicinfo.image)
+      local cropped = gears.surface.crop_surface {
+        ratio = (width + totalmargins * 2) / (height + totalmargins * 2),
+        surface = image
+      }
+      self:get_children_by_id('image')[1]:set_image(cropped);
       self:get_children_by_id('title')[1].text = musicinfo.title or 'Nothing playing'
       self:get_children_by_id('artist')[1].text = musicinfo.artist or ''
       self:get_children_by_id('playbtn')[1].text = musicinfo.status == 'Playing\n' and '' or ''

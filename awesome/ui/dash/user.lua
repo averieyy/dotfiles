@@ -8,6 +8,10 @@ local user = user_config.username_override or os.getenv 'USER'
 local host = user_config.hostname_override or os.getenv 'HOSTNAME'
 
 local show_welcome_message = not host or user_config.welcome_text
+local profile_picture = gears.surface.crop_surface {
+  ratio = 1,
+  surface = gears.surface.load_uncached(user_config.profile_picture or theme.wallpaper)
+}
 
 require 'signal.uptime'
 
@@ -19,7 +23,7 @@ local w = wibox.widget {
     forced_height = 64,
     resize = true,
     clip_shape = gears.shape.circle,
-    image = user_config.profile_picture or theme.wallpaper
+    image = profile_picture
   },
   {
     widget = wibox.container.place,

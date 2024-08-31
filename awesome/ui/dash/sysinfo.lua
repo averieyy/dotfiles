@@ -31,6 +31,8 @@ end
 ---@param width number
 ---@return wibox.widget
 local function progressbar (name, icon, bg, fg, prog_fg, prog_bg, width)
+  local barwidth = width / 12
+
   local w = wibox.widget {
     layout = wibox.layout.fixed.vertical,
     {
@@ -68,7 +70,7 @@ local function progressbar (name, icon, bg, fg, prog_fg, prog_bg, width)
             prog_fg
           },
           bg = prog_bg or theme.bg_dark,
-          thickness = 10,
+          thickness = barwidth,
           {
             widget = wibox.container.place,
             align = 'center',
@@ -93,8 +95,8 @@ return function (width, margins)
   local innerwidth = width - (margins * 2)
   local widget_spacing = 16
   local widget_margins = math.max(0, widget_spacing - margins)
-  local columns = 2
-  local progwidth = (innerwidth - widget_spacing - (widget_margins * 2)) / columns
+  local columns = battery_connected and 4 or 3
+  local progwidth = (innerwidth - (widget_spacing * (columns - 1)) - (widget_margins * columns)) / columns
 
   local cpu = progressbar('cpu', '󰍛', theme.bg_dark, theme.fg_focus, theme.emphasis, theme.bg, progwidth)
   local ram = progressbar('ram', '', theme.bg_dark, theme.fg_focus, theme.emphasis, theme.bg, progwidth)

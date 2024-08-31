@@ -105,4 +105,10 @@ function helpers.create_slider(icon, update, bg, fg, icon_colour, bar_width, hei
   }
 end
 
+function helpers.save_image_async_curl(url, filepath, callback)
+  awful.spawn.with_line_callback(string.format("curl -L -s %s -o %s", url, filepath), {
+    exit=callback
+  })
+end
+
 return helpers
