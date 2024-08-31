@@ -13,7 +13,7 @@
     "fg_emphasis" : "#1E1E2E"
   },
   "basefont": "Jetbrains Mono",
-  "symbolsfont": "Nerd Symbols",
+  "symbolsfont": "Symbols Nerd Font",
   "fontsize": 8,
   "wallpaper": "~/.config/awesome/theme/nord/background.jpg"
 }

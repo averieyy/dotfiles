@@ -19,4 +19,9 @@ theme.menu_submenu = ">  "
 theme.menu_height  = dpi(30)
 theme.menu_width   = dpi(150)
 
+-- naughty (notifications)
+theme.notification_icon_size = 96
+theme.notification_margins = 8
+theme.notification_width = 256
+
 return theme
