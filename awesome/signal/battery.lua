@@ -11,5 +11,6 @@ gears.timer {
     if not f then return end
     local capacity = f:read("n")
     awesome.emit_signal('battery::capacity', capacity)
+    f:close()
   end
 }

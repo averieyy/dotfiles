@@ -12,6 +12,12 @@ return function (dashwidth, dashmargins)
   local width = dashwidth - margins * 2
   local height = width / 2
 
+  local imagewidget = nil
+  local titlewidget = nil
+  local artistwidget = nil
+  local playwidget = nil
+  local progresswidget = nil
+
   local musicwidget = wibox.widget {
     widget = wibox.container.margin,
     margins = margins,
@@ -126,24 +132,41 @@ return function (dashwidth, dashmargins)
         },
       },
     },
-    set_values = function (self, musicinfo)
-      local image = gears.surface.load_uncached(musicinfo.image)
+    set_image = function (self, imageuri)
+      local image = gears.surface.load_uncached(imageuri)
       local cropped = gears.surface.crop_surface {
         ratio = (width + totalmargins * 2) / (height + totalmargins * 2),
         surface = image
       }
       self:get_children_by_id('image')[1]:set_image(cropped);
-      self:get_children_by_id('title')[1].text = musicinfo.title or 'Nothing playing'
-      self:get_children_by_id('artist')[1].text = musicinfo.artist or ''
-      self:get_children_by_id('playbtn')[1].text = musicinfo.status == 'Playing\n' and '' or ''
-      local progressbar = self:get_children_by_id('progressbar')[1]
+    end,
+    set_values = function (self, musicinfo)
+      if not (imagewidget and titlewidget and artistwidget and playwidget and progresswidget) then
+        naughty.notify {
+          title = "Could not load music widget elements",
+          urgency = "critical"
+        }
+        return
+      end
+      if musicinfo.image then
+        self.image = musicinfo.image
+      end
+      titlewidget.text = musicinfo.title or 'Nothing playing'
+      artistwidget.text = musicinfo.artist or ''
+      playwidget.text = musicinfo.status == 'Playing\n' and '' or ''
       if musicinfo.length and musicinfo.position then
-        progressbar.value = tonumber(musicinfo.position) / (tonumber(musicinfo.length) / 1000000)
+        progresswidget.value = tonumber(musicinfo.position) / (tonumber(musicinfo.length) / 1000000)
       else
-        progressbar.value = 0
+        progresswidget.value = 0
       end
     end
   }
+
+  imagewidget = musicwidget:get_children_by_id("image")[1]
+  titlewidget = musicwidget:get_children_by_id("title")[1]
+  artistwidget = musicwidget:get_children_by_id("artist")[1]
+  playwidget = musicwidget:get_children_by_id("playbtn")[1]
+  progresswidget = musicwidget:get_children_by_id("progressbar")[1]
 
   music.get_info(function (v)
     musicwidget.values = v

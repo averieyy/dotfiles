@@ -16,6 +16,8 @@ local position_command = 'position'
 
 local music = {}
 
+local lastimageurl = nil
+
 function music.get_info (callback)
   local response = {
     image = nil,
@@ -37,17 +39,24 @@ function music.get_info (callback)
       return
     end
 
-    local arturl = string.match(raw_metadata, 'artUrl *([^\n]*)')
-    response.image = os.tmpname()
-
     response.artist = string.match(raw_metadata, 'artist *([^\n]*)')
     response.title = string.match(raw_metadata, 'title *([^\n]*)')
     response.length = string.match(raw_metadata, 'length *([^\n]*)')
+    local arturl = string.match(raw_metadata, 'artUrl *([^\n]*)')
 
-    helpers.save_image_async_curl(arturl, response.image, function ()
+    if lastimageurl ~= arturl then
+      lastimageurl = arturl
+
+      response.image = os.tmpname()
+      helpers.save_image_async_curl(arturl, response.image, function ()
+        if finished.status and finished.position then callback(response) end
+        finished.metadata = true
+      end)
+    else
+
       if finished.status and finished.position then callback(response) end
       finished.metadata = true
-    end)
+    end
   end)
 
   awful.spawn.easy_async_with_shell(base_command .. status_command, function (status)
