@@ -18,6 +18,10 @@ return function (dashwidth, dashmargins)
   local playwidget = nil
   local progresswidget = nil
 
+  local position = nil
+  local length = nil
+  local playing = false
+
   local musicwidget = wibox.widget {
     widget = wibox.container.margin,
     margins = margins,
@@ -141,6 +145,7 @@ return function (dashwidth, dashmargins)
       self:get_children_by_id('image')[1]:set_image(cropped);
     end,
     set_values = function (self, musicinfo)
+      position = tonumber(musicinfo.position)
       if not (imagewidget and titlewidget and artistwidget and playwidget and progresswidget) then
         naughty.notify {
           title = "Could not load music widget elements",
@@ -153,11 +158,28 @@ return function (dashwidth, dashmargins)
       end
       titlewidget.text = musicinfo.title or 'Nothing playing'
       artistwidget.text = musicinfo.artist or ''
-      playwidget.text = musicinfo.status == 'Playing\n' and '' or ''
+      playing = musicinfo.status == 'Playing\n'
+      playwidget.text = playing and '' or ''
       if musicinfo.length and musicinfo.position then
-        progresswidget.value = tonumber(musicinfo.position) / (tonumber(musicinfo.length) / 1000000)
+        length = tonumber(musicinfo.length)
+        progresswidget.value = position / (tonumber(musicinfo.length) / 1000000)
       else
         progresswidget.value = 0
+      end
+    end
+  }
+
+  local progressupdate = 0.5
+
+  gears.timer {
+    timeout = progressupdate,
+    autostart = true,
+    callback = function ()
+      if position then
+        if playing then
+          position = position + progressupdate
+        end
+        progresswidget.value = (position / (length / 1000000)) or 0
       end
     end
   }

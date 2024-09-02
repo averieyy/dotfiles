@@ -7,14 +7,16 @@ local awful = require 'awful'
 local gears = require 'gears'
 local helpers = require 'helpers'
 
-local player = apps.player or 'spotify'
+local music = {}
 
-local base_command = "playerctl --player=" .. player .. ",%any -s "
+music.player = apps.player or 'spotify'
+
+music.base_command = "playerctl --player=" .. music.player .. ",%any -s "
+
 local metadata_command = "metadata"
 local status_command = "status"
 local position_command = 'position'
 
-local music = {}
 
 local lastimageurl = nil
 
@@ -32,7 +34,7 @@ function music.get_info (callback)
     position = false,
   }
 
-  awful.spawn.easy_async_with_shell(base_command .. metadata_command, function (raw_metadata)
+  awful.spawn.easy_async_with_shell(music.base_command .. metadata_command, function (raw_metadata)
     if #raw_metadata == 0 then
       finished.metadata = true
     if finished.status and finished.position then callback(response) end
@@ -59,7 +61,7 @@ function music.get_info (callback)
     end
   end)
 
-  awful.spawn.easy_async_with_shell(base_command .. status_command, function (status)
+  awful.spawn.easy_async_with_shell(music.base_command .. status_command, function (status)
 
     if #status == 0 then
       finished.status = true
@@ -73,7 +75,7 @@ function music.get_info (callback)
     finished.status = true
   end)
 
-  awful.spawn.easy_async_with_shell(base_command .. position_command, function (position)
+  awful.spawn.easy_async_with_shell(music.base_command .. position_command, function (position)
 
     if #position == 0 then
       finished.status = true
@@ -89,7 +91,7 @@ function music.get_info (callback)
 end
 
 gears.timer {
-  timeout = 1,
+  timeout = 5,
   call_now = true,
   autostart = true,
   callback = function ()
@@ -97,11 +99,10 @@ gears.timer {
       awesome.emit_signal('music::response', response)
     end)
   end
-
 }
 
 function music.do_command (command)
-  awful.spawn.easy_async_with_shell(base_command .. command, function ()
+  awful.spawn.easy_async_with_shell(music.base_command .. command, function ()
     music.get_info(function (response)
       awesome.emit_signal('music::response', response)
     end)
