@@ -4,6 +4,7 @@ local user_widget = require 'ui.dash.user'
 local sysinfo = require 'ui.dash.sysinfo'
 local music   = require 'ui.dash.music'
 local sliders = require 'ui.dash.sliders'
+local time    = require 'ui.dash.time'
 
 local dash_width = 400
 local dash_margins = 16
@@ -25,6 +26,7 @@ return function (s)
         spacing = 16,
         user_widget,
         music (dash_width, dash_margins),
+        time(dash_width, dash_margins),
         sysinfo (dash_width, dash_margins),
         sliders (dash_width, dash_margins),
       }

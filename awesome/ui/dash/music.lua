@@ -49,7 +49,6 @@ return function (dashwidth, dashmargins)
             widget = wibox.container.margin,
             margins = 8,
             {
-  
               layout = wibox.layout.fixed.vertical,
               spacing = 8,
               forced_width = width * 3 / 4,
@@ -169,7 +168,7 @@ return function (dashwidth, dashmargins)
     end
   }
 
-  local progressupdate = 0.5
+  local progressupdate = 0.2
 
   gears.timer {
     timeout = progressupdate,
