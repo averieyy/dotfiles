@@ -4,58 +4,60 @@ local gears = require 'gears'
 
 return function (width, totalmargins)
 
-  local opacitystep = 0
-
   local w = wibox.widget {
     forced_width = width,
     forced_height = width / 3,
     widget = wibox.container.place,
     align = 'center',
     {
-      layout = wibox.layout.fixed.horizontal,
-      spacing = totalmargins / 3,
+      layout = wibox.layout.fixed.vertical,
       {
-        widget = wibox.widget.textbox,
-        id = 'hour',
-        text = '10',
-        font = theme.base_font .. ' 24'
+        layout = wibox.layout.fixed.horizontal,
+        spacing = totalmargins / 3,
+        {
+          widget = wibox.container.background,
+          fg = theme.emphasis,
+          {
+            widget = wibox.widget.textbox,
+            id = 'hour',
+            text = '10',
+            font = theme.base_font .. ' 24'
+          }
+        },
+        {
+          widget = wibox.widget.textbox,
+          text = ':',
+          opacity = .5,
+          font = theme.base_font .. ' 20'
+        },
+        {
+          widget = wibox.widget.textbox,
+          id = 'minutes',
+          text = '10',
+          font = theme.base_font .. ' 24'
+        },
       },
       {
-        widget = wibox.widget.textbox,
-        id = ':',
-        text = ':',
-        font = theme.base_font .. ' 20'
-      },
-      {
-        widget = wibox.widget.textbox,
-        id = 'minutes',
-        text = '10',
-        font = theme.base_font .. ' 24'
-      },
+        widget = wibox.container.background,
+        bg = theme.fg,
+        forced_height = 3,
+        shape = gears.shape.rounded_bar,
+      }
     },
     set_time = function (self, time)
       local hour = self:get_children_by_id('hour')[1]
       local mins = self:get_children_by_id('minutes')[1]
 
-      hour.text = time.hour
-      mins.text = time.min
+      hour.text = string.format("%02d", time.hour)
+      mins.text = string.format("%02d", time.min)
     end,
-    blink = function (self, opacitystep)
-      local sep = self:get_children_by_id(':')[1]
-      local op = math.sin(opacitystep / 20 * math.pi)
-      sep.opacity = op > .2 and op or 0
-    end
   }
 
   gears.timer {
-    timeout = .1,
+    timeout = 1,
     autostart = true,
     callback = function ()
-      if opacitystep % 20 == 0 then
-        w.time = os.date("*t")
-      end
-      opacitystep = (opacitystep + 1) % 20
-      w:blink(opacitystep)
+      w.time = os.date("*t")
     end
   }
 
