@@ -42,6 +42,10 @@ awful.keyboard.append_global_keybindings({
    -- Dashboard
    awful.key({ modkey, }, 'd', function () awful.screen.focused().dash:toggle() end,
       { description = 'open dashboard', group = 'launcher' }),
+   
+   -- Lock screen
+   awful.key({ modkey, }, 'l', function () awful.spawn.with_shell('xsecurelock') end,
+      { description = 'lock screen', group = 'launcher' }),
 
    -- Tags related keybindings.
    awful.key({ modkey,           }, 'Left', awful.tag.viewprev,

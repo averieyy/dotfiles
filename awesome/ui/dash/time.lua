@@ -25,10 +25,13 @@ return function (width, totalmargins)
           }
         },
         {
-          widget = wibox.widget.textbox,
-          text = ':',
-          opacity = .5,
-          font = theme.base_font .. ' 20'
+          widget = wibox.container.background,
+          fg = theme.fg_subtext,
+          {
+            widget = wibox.widget.textbox,
+            text = ':',
+            font = theme.base_font .. ' 20'
+          }
         },
         {
           widget = wibox.widget.textbox,

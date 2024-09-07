@@ -9,7 +9,7 @@
     "bg_dark" : "#2E3440",
     "bg_light" : "#434C5E",
     "fg" : "#ECEFF4",
-    "fg_subtext" : "#D8DEE9",
+    "fg_subtext" : "#4c566a",
     "fg_emphasis" : "#3B4252"
   },
   "basefont": "Jetbrains Mono",
